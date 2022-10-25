@@ -1,0 +1,191 @@
+todo // Me da errores cada vez que intento editar algo en workbench utilizando la base de datos que he creado con diagramas.
+todo // Haré los ejercicios simulando que está bien creada y guiándome por lógica,
+todo // pero no puedo comprobar si están bien...
+
+todo // El código del diagrama que he creado es este.
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema e-commerce
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema e-commerce
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `e-commerce` DEFAULT CHARACTER SET utf8 ;
+USE `e-commerce` ;
+
+-- -----------------------------------------------------
+-- Table `e-commerce`.`Users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e-commerce`.`Users` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  `email` VARCHAR(45) NULL,
+  `phone` VARCHAR(45) NULL,
+  `address` VARCHAR(45) NULL,
+  `country` VARCHAR(2) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `e-commerce`.`Categories`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e-commerce`.`Categories` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `e-commerce`.`Products`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e-commerce`.`Products` (
+  `id` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  `price` VARCHAR(45) NULL,
+  `description` VARCHAR(45) NULL,
+  `Categories_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_Products_Categories_idx` (`Categories_id` ASC) VISIBLE,
+  CONSTRAINT `fk_Products_Categories`
+    FOREIGN KEY (`Categories_id`)
+    REFERENCES `e-commerce`.`Categories` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `e-commerce`.`Orders`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e-commerce`.`Orders` (
+  `id` INT NOT NULL,
+  `date_ordered` VARCHAR(45) NULL,
+  `amount` VARCHAR(45) NULL,
+  `payments_stuff` VARCHAR(45) NULL,
+  `Users_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_Orders_Users1_idx` (`Users_id` ASC) VISIBLE,
+  CONSTRAINT `fk_Orders_Users1`
+    FOREIGN KEY (`Users_id`)
+    REFERENCES `e-commerce`.`Users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `e-commerce`.`Orders_has_Products`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `e-commerce`.`Orders_has_Products` (
+  `Orders_id` INT NOT NULL,
+  `Products_id` INT NOT NULL,
+  `quantity` INT NULL,
+  PRIMARY KEY (`Orders_id`, `Products_id`),
+  INDEX `fk_Orders_has_Products_Products1_idx` (`Products_id` ASC) VISIBLE,
+  INDEX `fk_Orders_has_Products_Orders1_idx` (`Orders_id` ASC) VISIBLE,
+  CONSTRAINT `fk_Orders_has_Products_Orders1`
+    FOREIGN KEY (`Orders_id`)
+    REFERENCES `e-commerce`.`Orders` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Orders_has_Products_Products1`
+    FOREIGN KEY (`Products_id`)
+    REFERENCES `e-commerce`.`Products` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+
+* 2.1.Crear diagrama
+? Crea un diagrama utilizando MySQL Workbench de una base de datos de un e-commerce (tienda online) con las siguientes tablas:
+? Tabla Users
+? Tabla Products
+? Tabla Orders
+? Tabla Categories
+? Debe mostrar los tipos de relaciones entre cada tabla. *Recuerda que en el caso de una relación muchos a muchos necesitarás una tabla intermedia.
+
+todo // El diagrama que he creado se encuentra en 
+todo // el archivo que he adjuntado en la entrega de Classroom.
+
+todo // Orders_has_Products se ha creado solo al seleccionar 
+todo // la penúltima opción donde salen las formas de unir tablas
+todo // many to many y la he dejado para preguntaros en clase.
+
+* 2.2. Ejecute las siguientes consultas SQL
+? A continuación, deberá realizar las siguientes consultas SQL:
+
+* 2.2.1 INSERTAR DATOS
+
+? Inserte al menos 5 nuevos usuarios.
+INSERT INTO Users (name) VALUES ('Lorena');
+INSERT INTO Users (name) VALUES ('Jaime');
+INSERT INTO Users (name) VALUES ('Javier');
+INSERT INTO Users (name) VALUES ('Elsa');
+INSERT INTO Users (name) VALUES ('Ricardo');
+
+? Inserte al menos 5 nuevos productos.
+INSERT INTO Products (name) VALUES ('Hielo');
+INSERT INTO Products (name) VALUES ('Sal');
+INSERT INTO Products (name) VALUES ('Agua');
+INSERT INTO Products (name) VALUES ('Manzana');
+INSERT INTO Products (name) VALUES ('Zumo de uva');
+
+? Inserte al menos 5 nuevos pedidos(orders).
+todo // Aquí me he liado al no poder comprobarlo, con el FK pasaría a esta tabla el id de products?
+
+? Inserte al menos 2 tipos de categorías.
+INSERT INTO Categories (name) VALUES ('Zumos');
+INSERT INTO Categories (name) VALUES ('Condimentos');
+		
+* 2.2.2 ACTUALIZAR DATOS
+
+? Cambiar el nombre de un producto. Para ello, genera una consulta que afecte
+? solo a un determinado producto en función de su id.
+UPDATE products SET name = 'Gaseosa' WHERE id = 2;
+
+? Cambiar el precio de un producto a 50€. Para ello, 
+? genera una consulta que afecte solo a un determinado producto en función de su  id.
+UPDATE products SET price = '1,50' WHERE id = 3;
+
+* 2.2.3 OBTENER DATOS
+
+? Seleccione todos los productos con un precio superior a 20€.
+SELECT * FROM Products WHERE price > 20 
+
+? Muestre de forma descendente los productos.
+SELECT * FROM Products order by price desc
+
+? Seleccione todos los productos y que muestre la categoría a la que pertenecen.
+! SELECT * FROM Products, Categories  
+todo // Creo que está mal, saldrían todo los productos y 
+todo // todas las categorías no la categoría de cada producto
+
+todo // Mi teoría es que tendría que sacarlo usando el name 
+todo // de la Tabla Categories y Categories_id que tiene FK en la tabla Products.
+
+? Seleccione todos los usuarios y muestre sus pedidos.
+todo // Aquí lo mismo que en el de arriba... Debería sumarlos o algo así? 
+! SELECT * FROM Users WHERE name + SELECT ORDERS by Users
+
+? Selecciona un producto por su id y que muestre la categoría a la que pertenece.
+todo // Este sería igual al 3er ejercicio solo que
+todo // en vez de "SELECT * "Sería "SELECT Products WHERE id = 1"  
+
+? Seleccione a un usuario por su id y muestre los pedidos que tiene.
+todo // Así tiene más lógica para mi, pero no sé...
+! SELECT Orders by Users WHERE id = 2 ??
+
